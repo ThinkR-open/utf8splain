@@ -22,3 +22,7 @@ a tibble (with extra class "tbl_runes") with columns:
 \description{
 Split a string into unicode runes
 }
+\examples{
+runes( "hello world" )
+#' @importFrom magrittr \%>\%
+}

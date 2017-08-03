@@ -55,7 +55,9 @@ extract_rune <- function( bits ){
 #' - utf8_binary: binary representation of the utf8 bytes
 #' - description: description of the rune, from [uni::code]
 #'
-#' @importFrom magrittr %>%
+#' @examples
+#' runes( "hello world" )
+#'#' @importFrom magrittr %>%
 #' @importFrom purrr map map_int
 #' @importFrom dplyr group_by summarise mutate select left_join
 #' @importFrom tidyr nest
