@@ -23,8 +23,8 @@ extract_rune <- function( bits ){
 }
 
 #' @importFrom magrittr %>%
-#' @importFrom purrr map
-#' @importFrom dplyr group_by summarise mutate
+#' @importFrom purrr map map_int
+#' @importFrom dplyr group_by summarise mutate select
 #' @importFrom tidyr nest
 #' @export
 runes <- function(s){
