@@ -2,7 +2,6 @@
 
 export(bits)
 export(runes)
-importFrom(Rcpp,sourceCpp)
 importFrom(dplyr,group_by)
 importFrom(dplyr,mutate)
 importFrom(dplyr,select)
@@ -14,4 +13,3 @@ importFrom(purrr,map_int)
 importFrom(stringr,str_replace)
 importFrom(tibble,tibble)
 importFrom(tidyr,nest)
-useDynLib(utf8splain)

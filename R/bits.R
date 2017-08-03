@@ -47,7 +47,7 @@ runes <- function(s){
     ) %>%
     mutate(
       rune_binary  = map_chr( bits, extract_rune ),
-      rune_decimal = parse_binary(rune_binary),
+      rune_decimal = strtoi(rune_binary, base = 2),
       rune         = sprintf( "U+%04X", rune_decimal ),
       hex          = map_chr( bytes, ~ paste( sprintf("%02X", as.integer(.)), collapse = " " ) )
     ) %>%
