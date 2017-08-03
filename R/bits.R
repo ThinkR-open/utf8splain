@@ -57,7 +57,8 @@ extract_rune <- function( bits ){
 #'
 #' @examples
 #' runes( "hello world" )
-#'#' @importFrom magrittr %>%
+#'
+#' @importFrom magrittr %>%
 #' @importFrom purrr map map_int
 #' @importFrom dplyr group_by summarise mutate select left_join
 #' @importFrom tidyr nest
@@ -90,4 +91,41 @@ runes <- function(s){
     select( id, rune, rune_binary, rune_decimal, utf8_bytes, utf8_binary ) %>%
     left_join( select(uni::code, rune, description) , by = "rune" ) %>%
     structure( class = c( "tbl_runes", class(.) ) )
+}
+
+#' @importFrom grDevices grey
+#' @importFrom crayon make_style bold
+hide_encoding_one <- function(x){
+  rx    <- "^(1*0)(.*)$"
+  hide <- make_style( grey(0.9), grey = TRUE )
+  left  <- hide( str_replace(x, rx, "\\1") )
+  right <- str_replace(x, rx, "\\2")
+  paste( paste0( left, right ), collapse = " " )
+}
+
+#' @importFrom stringr str_split
+hide_encoding_bits <- function( binary ){
+  str_split(binary, " ") %>%
+    map_chr( hide_encoding_one )
+}
+
+#' @importFrom crayon bold blue red
+#' @importFrom dplyr mutate_at vars mutate pull
+#' @export
+print.tbl_runes <- function(x, ...){
+  n <- nrow(x)
+  cat( "utf-8 encoded string with", n, "runes\n\n")
+
+  txt <- x %>%
+    select(rune, utf8_bytes, utf8_binary, description) %>%
+    as.data.frame() %>%
+    mutate_at(vars(utf8_bytes, utf8_binary), format, justify = "right") %>%
+    mutate_at(vars(rune,description), format, justify = "left") %>%
+    mutate( utf8_binary = hide_encoding_bits(utf8_binary)) %>%
+    mutate( text = paste( bold(rune), red(utf8_bytes), utf8_binary, blue(description), sep = "   ") ) %>%
+    pull()
+
+  writeLines(txt)
+
+  invisible(x)
 }

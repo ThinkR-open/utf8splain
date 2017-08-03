@@ -24,5 +24,5 @@ Split a string into unicode runes
 }
 \examples{
 runes( "hello world" )
-#' @importFrom magrittr \%>\%
+
 }

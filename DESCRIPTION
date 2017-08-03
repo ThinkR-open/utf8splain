@@ -10,7 +10,9 @@ LazyData: true
 Imports: purrr,
     tibble,
     dplyr,
-    uni
+    uni,
+    crayon,
+    grDevices
 RoxygenNote: 6.0.1.9000
 LinkingTo: Rcpp
 Remotes:
