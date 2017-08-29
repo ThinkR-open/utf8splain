@@ -14,7 +14,7 @@ library(utf8splain)
 ## Installation from github
 
 ```{r eval=FALSE}
-devtools::install_github( "ThinkRstat/utf8splain")
+devtools::install_github( "ThinkR-open/utf8splain")
 ```
 
 ## Split a string into bytes 
