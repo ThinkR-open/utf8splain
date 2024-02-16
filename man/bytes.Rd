@@ -13,7 +13,7 @@ bytes(s)
 a tibble (with extra class "tbl_bytes") with columns
 - id : index of the byte
 - byte: hex representation of the byte
-- decimal: decimal reprsentation of the byte
+- decimal: decimal representation of the byte
 - binary: binary representation of the byte
 }
 \description{
