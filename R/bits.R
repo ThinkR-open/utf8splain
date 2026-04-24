@@ -64,6 +64,8 @@ extract_rune <- function( bits ){
 #' @importFrom tidyr nest
 #' @export
 runes <- function(s){
+  display_chars <- strsplit(s, "", fixed = FALSE)[[1L]]
+
   bytes <- charToRaw(s)
   bits  <- map( bytes,~ rev(rawToBits(.)) )
 
@@ -85,10 +87,11 @@ runes <- function(s){
       rune_binary  = map_chr( bits, extract_rune ),
       rune_decimal = strtoi(rune_binary, base = 2),
       rune         = sprintf( "U+%04X", rune_decimal ),
+      display      = display_chars[ id ],
       utf8_bytes   = map_chr( bytes, ~ paste( sprintf("%02X", as.integer(.)), collapse = " " ) ),
       utf8_binary  = map_chr( bits, ~ paste( map_chr(., ~paste(as.numeric(.), collapse = "") ), collapse = " " ) )
     ) %>%
-    select( id, rune, rune_binary, rune_decimal, utf8_bytes, utf8_binary ) %>%
+    select( id, display, rune, rune_binary, rune_decimal, utf8_bytes, utf8_binary ) %>%
     left_join( select(uni::code, rune, description) , by = "rune" ) %>%
     structure( class = c( "tbl_runes", class(.) ) )
 }
@@ -110,7 +113,7 @@ hide_encoding_bits <- function( binary ){
 }
 
 #' @importFrom crayon bold blue red
-#' @importFrom dplyr mutate_at vars mutate pull
+#' @importFrom dplyr across mutate pull
 #' @export
 print.tbl_runes <- function(x, ...){
   n <- nrow(x)
@@ -119,8 +122,8 @@ print.tbl_runes <- function(x, ...){
   txt <- x %>%
     select(rune, utf8_bytes, utf8_binary, description) %>%
     as.data.frame() %>%
-    mutate_at(vars(utf8_bytes, utf8_binary), format, justify = "right") %>%
-    mutate_at(vars(rune,description), format, justify = "left") %>%
+    mutate(across(c(utf8_bytes, utf8_binary), ~ format(.x, justify = "right"))) %>%
+    mutate(across(c(rune, description),       ~ format(.x, justify = "left"))) %>%
     mutate( utf8_binary = hide_encoding_bits(utf8_binary)) %>%
     mutate( text = paste( bold(rune), red(utf8_bytes), utf8_binary, blue(description), sep = "   ") ) %>%
     pull()
