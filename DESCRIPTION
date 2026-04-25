@@ -12,8 +12,13 @@ Imports: purrr,
     dplyr,
     uni,
     crayon,
-    grDevices
+    grDevices,
+    magrittr,
+    stringr,
+    tidyr
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
 RoxygenNote: 7.3.3
-LinkingTo: Rcpp
 Remotes:
   ThinkRstat/uni
