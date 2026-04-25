@@ -48,6 +48,9 @@ extract_rune <- function( bits ){
 #'
 #' @return a tibble (with extra class "tbl_runes") with columns:
 #' - id: index of the rune in the input
+#' - display: the literal character for that rune (one code point per row;
+#'   multi-code-point grapheme clusters such as country flags or ZWJ
+#'   sequences are split across rows, one per code point)
 #' - rune: name of the rune, i.e. an hex representation prefixed by "U+"
 #' - rune_binary: binary representation of the rune
 #' - rune_decimal: decimal representation of the rune, i.e. the index of the character in the unicode table
@@ -64,7 +67,7 @@ extract_rune <- function( bits ){
 #' @importFrom tidyr nest
 #' @export
 runes <- function(s){
-  display_chars <- strsplit(s, "", fixed = FALSE)[[1L]]
+  display_chars <- strsplit(s, "")[[1L]]
 
   bytes <- charToRaw(s)
   bits  <- map( bytes,~ rev(rawToBits(.)) )

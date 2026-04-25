@@ -12,6 +12,14 @@ test_that("runes() display column preserves ASCII characters", {
   expect_equal(res$display, c("h", "e", "l", "l", "o"))
 })
 
+test_that("runes() splits multi-code-point graphemes per code point (#1)", {
+  # The French flag emoji is a Regional Indicator pair (2 code points).
+  res <- runes("\U0001F1EB\U0001F1F7")
+  expect_equal(nrow(res), 2L)
+  expect_equal(res$rune, c("U+1F1EB", "U+1F1F7"))
+  expect_equal(res$display, c("\U0001F1EB", "\U0001F1F7"))
+})
+
 test_that("print.tbl_runes still works without mutate_at (#7)", {
   r <- runes("ok")
   out <- utils::capture.output(print(r))
