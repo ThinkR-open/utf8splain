@@ -1,11 +1,18 @@
 
-prepend_class <- function(., class){
-  class(.) <- c(class,class(.))
-  .
+utils::globalVariables(
+  c(
+    "rune", "utf8_bytes", "utf8_binary", "description",
+    "rune_binary", "rune_decimal"
+  )
+)
+
+prepend_class <- function(x, class){
+  class(x) <- c(class, class(x))
+  x
 }
 
-raw_to_bits <- function(.){
-  paste(substr(as.character(rev(rawToBits(.))), 2, 2), collapse = "")
+raw_to_bits <- function(x){
+  paste(substr(as.character(rev(rawToBits(x))), 2, 2), collapse = "")
 }
 
 #' Split a utf-8 encoded string into bytes
@@ -15,7 +22,7 @@ raw_to_bits <- function(.){
 #' @return a tibble (with extra class "tbl_bytes") with columns
 #' - id : index of the byte
 #' - byte: hex representation of the byte
-#' - decimal: decimal reprsentation of the byte
+#' - decimal: decimal representation of the byte
 #' - binary: binary representation of the byte
 #'
 #' @examples
@@ -37,7 +44,7 @@ bytes <- function(s){
 
 #' @importFrom stringr str_replace
 extract_rune <- function( bits ){
-  map_chr( bits, ~ paste(substr(as.character(.),2,2), collapse = "" ) ) %>%
+  map_chr( bits, \(bit) paste(substr(as.character(bit),2,2), collapse = "" ) ) %>%
     str_replace( "^1+0", "" ) %>%
     paste( collapse = "")
 }
@@ -65,9 +72,9 @@ extract_rune <- function( bits ){
 #' @export
 runes <- function(s){
   bytes <- charToRaw(s)
-  bits  <- map( bytes,~ rev(rawToBits(.)) )
+  bits  <- map(bytes, \(bit) rev(rawToBits(bit)) )
 
-  leading_1 <- map_int( bits, ~which.min(.)-1L )
+  leading_1 <- map_int( bits, \(bit) which.min(bit)-1L )
   id <- cumsum(leading_1 != 1)
 
   tibble(
@@ -85,12 +92,12 @@ runes <- function(s){
       rune_binary  = map_chr( bits, extract_rune ),
       rune_decimal = strtoi(rune_binary, base = 2),
       rune         = sprintf( "U+%04X", rune_decimal ),
-      utf8_bytes   = map_chr( bytes, ~ paste( sprintf("%02X", as.integer(.)), collapse = " " ) ),
-      utf8_binary  = map_chr( bits, ~ paste( map_chr(., ~paste(as.numeric(.), collapse = "") ), collapse = " " ) )
+      utf8_bytes   = map_chr( bytes, \(byte) paste( sprintf("%02X", as.integer(byte)), collapse = " " ) ),
+      utf8_binary  = map_chr( bits, \(bit) paste( map_chr(bit, \(x) paste(as.numeric(x), collapse = "") ), collapse = " " ) )
     ) %>%
     select( id, rune, rune_binary, rune_decimal, utf8_bytes, utf8_binary ) %>%
     left_join( select(uni::code, rune, description) , by = "rune" ) %>%
-    structure( class = c( "tbl_runes", class(.) ) )
+    prepend_class("tbl_runes")
 }
 
 #' @importFrom grDevices grey

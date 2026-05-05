@@ -33,8 +33,8 @@ a recent enough version of rstudio, the `print` method gives you a nicer output:
 ## Details about unicode and utf-8
 
 utf-8 encoded strings are divided in a series of runes (aka unicode code points) from 
-the [unicode table](https://unicode-table.com/en/), for example the rune 
-for the lower case "h" is [U+0068](https://unicode-table.com/en/#0068). 
+the [unicode table](https://symbl.cc/en/unicode/table/), for example the rune 
+for the lower case "h" is [U+0068](https://symbl.cc/en/unicode/table/#0068). 
 
 Each rune is encoded in a variable number of bytes, depending on how far it is in the
 table, for example "h" (and all other ascii characters) only need one byte, but 
@@ -46,7 +46,7 @@ utf-8 bytes are organised as follows:
  - the remaining bytes (if any) all start with "10"
  
 All the bits that are not taken are used to store the binary representation of the rune, 
-for example the 7 bits "1101000" follow the initial "0" in the encoding of "h". 🌍 correspond to the rune [U+1F30D](https://unicode-table.com/en/#1F30D), i.e. the rune number `0x1F30D`. 
+for example the 7 bits "1101000" follow the initial "0" in the encoding of "h". 🌍 correspond to the rune [U+1F30D](https://symbl.cc/en/unicode/table/#1F30D), i.e. the rune number `0x1F30D`. 
 
 ```{r}
 world_decimal <- strtoi( "0x1F30D", base = 16)
